@@ -1,6 +1,6 @@
 services:
   minio:
-    image: quay.io/minio/minio:latest
+    image: docker.io/pgsty/silo:RELEASE.2026-09-16T00-00-00Z
     container_name: tp2-minio
     command: server /data --console-address ":9001"
     environment:
