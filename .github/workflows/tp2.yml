@@ -1,0 +1,38 @@
+name: TP2-Retail
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'C:TP2-Retail/**'
+      - '.github/workflows/tp2.yml'
+
+jobs:
+  tp2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create hadoop network
+        run: docker network create hadoop
+
+      - name: Start MySQL and MinIO
+        run: docker compose -f "C:TP2-Retail/compose.yaml" up -d
+
+      - name: Wait for MySQL
+        run: |
+          for i in $(seq 1 30); do
+            if docker exec tp2-mysql mysql -u tp2 -pTp2Mysql2026! retail -e "SELECT 1"; then
+              echo "MySQL OK"; break
+            fi
+            sleep 2
+          done
+
+      - name: Verify containers on hadoop network
+        run: |
+          docker ps
+          docker network inspect hadoop --format '{{range .Containers}}{{.Name}} {{end}}'
+
+      - name: Logs
+        if: always()
+        run: docker compose -f "C:TP2-Retail/compose.yaml" logs
