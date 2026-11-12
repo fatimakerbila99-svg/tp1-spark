@@ -22,7 +22,7 @@ jobs:
            username: ${{ secrets.DOCKER_USERNAME }}
            password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Start MySQL and MinIO
-        run: docker compose -f "C:TP2-Retail/compose.yaml" up -d
+        run: docker compose -f TP2-Retail/compose.yaml up -d
 
       - name: Wait for MySQL
         run: |
